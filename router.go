@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/007team/douyinapp/controller"
+	"github.com/007team/douyinapp/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,11 +15,11 @@ func initRouter(r *gin.Engine) {
 
 	// basic apis
 	apiRouter.GET("/feed/", controller.Feed)
-	apiRouter.GET("/user/", controller.UserInfo)
 	apiRouter.POST("/user/register/", controller.Register)
 	apiRouter.POST("/user/login/", controller.Login)
-	apiRouter.POST("/publish/action/", controller.Publish)
-	apiRouter.GET("/publish/list/", controller.PublishList)
+	apiRouter.GET("/user/", middlewares.JWTAuthMiddleware(), controller.UserInfo)
+	apiRouter.POST("/publish/action/", middlewares.JWTAuthMiddleware(), controller.Publish)
+	apiRouter.GET("/publish/list/", middlewares.JWTAuthMiddleware(), controller.PublishList)
 
 	// extra apis - I
 	apiRouter.POST("/favorite/action/", controller.FavoriteAction)

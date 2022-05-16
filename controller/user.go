@@ -1,9 +1,13 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"net/http"
 	"sync/atomic"
+
+	"github.com/007team/douyinapp/pkg/jwt"
+
+	"github.com/gin-gonic/gin"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
@@ -34,9 +38,14 @@ type UserResponse struct {
 
 func Register(c *gin.Context) {
 	username := c.Query("username")
-	password := c.Query("password")
+	//password := c.Query("password")
 
-	token := username + password
+	token, _, err := jwt.GenToken(userIdSequence)
+	fmt.Println(token)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	if _, exist := usersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, UserLoginResponse{
@@ -52,7 +61,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{StatusCode: 0},
 			UserId:   userIdSequence,
-			Token:    username + password,
+			Token:    token,
 		})
 	}
 }
@@ -60,7 +69,6 @@ func Register(c *gin.Context) {
 func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
-
 	token := username + password
 
 	if user, exist := usersLoginInfo[token]; exist {
@@ -74,12 +82,15 @@ func Login(c *gin.Context) {
 			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
 		})
 	}
+
 }
 
+// UserInfo 用户信息
 func UserInfo(c *gin.Context) {
-	token := c.Query("token")
+	//token := c.Query("token")
+	token, _ := c.Get("token")
 
-	if user, exist := usersLoginInfo[token]; exist {
+	if user, exist := usersLoginInfo[token.(string)]; exist {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 0},
 			User:     user,
