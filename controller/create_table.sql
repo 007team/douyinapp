@@ -9,7 +9,6 @@ CREATE TABLE user
     `is_follow`         boolean                 NOT NULL DEFAULT FALSE comment '是否关注',
     `user_id`           bigint(20)              NOT NULL COMMENT 'user_id',
     `password`          varchar(64)             NOT NULL collate utf8mb4_general_ci NOT NULL,
-    `salt`              integer                 not null comment '加密 salt',
     `create_time`       timestamp               NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `modify_time`       timestamp               NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 
