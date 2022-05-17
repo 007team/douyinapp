@@ -1,16 +1,11 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
-)
 
-type FeedResponse struct {
-	Response
-	VideoList []Video `json:"video_list,omitempty"`
-	NextTime  int64   `json:"next_time,omitempty"`
-}
+	"github.com/gin-gonic/gin"
+)
 
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
