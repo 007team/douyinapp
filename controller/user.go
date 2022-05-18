@@ -4,6 +4,12 @@ package controller
 
 import (
 	"fmt"
+	"log"
+	"strconv"
+
+	"github.com/007team/douyinapp/logic"
+
+	"github.com/007team/douyinapp/models"
 
 	"github.com/007team/douyinapp/pkg/jwt"
 
@@ -50,16 +56,20 @@ func Login(c *gin.Context) {
 
 // UserInfo 用户信息
 func UserInfo(c *gin.Context) {
-	//token := c.Query("token")
-
-	//if user, exist := usersLoginInfo[token]; exist {
-	//	c.JSON(http.StatusOK, UserResponse{
-	//		Response: Response{StatusCode: 0},
-	//		User:     user,
-	//	})
-	//} else {
-	//	c.JSON(http.StatusOK, UserResponse{
-	//		Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
-	//	})
-	//}
+	userIdStr := c.Query("user_id") // 获取用户id
+	userid, err := strconv.ParseInt(userIdStr, 10, 64)
+	if err != nil {
+		log.Fatalln("UserInfo: user_id invalied", err)
+		UserResponseFunc(c, 1, CodeInvalidParam, models.User{})
+		return
+	}
+	user := models.User{
+		Id: userid,
+	}
+	if err := logic.UserInfo(&user); err != nil {
+		log.Fatalln("logic.UserInfo failed", err)
+		UserResponseFunc(c, 1, CodeServerBusy, user)
+		return
+	}
+	UserResponseFunc(c, 0, CodeSuccess, user)
 }
