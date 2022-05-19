@@ -39,13 +39,3 @@ func Publish(c *gin.Context) {
 	//	StatusMsg:  finalName + " uploaded successfully",
 	//})
 }
-
-// PublishList all users have same publish video list
-func PublishList(c *gin.Context) {
-	//c.JSON(http.StatusOK, VideoListResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//	},
-	//	VideoList: DemoVideos,
-	//})
-}
