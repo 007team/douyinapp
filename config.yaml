@@ -1,0 +1,24 @@
+app:
+  name: "douyinapp"
+  mode: "debug"
+  port: 8080
+  version: "v0.0.1"
+  start_time: "2022-5-16"
+
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "douyin"
+  max_open_conns: 200
+  max_idle_conns: 50
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  db: 0
+  password: ""
+  pool_size: 100
+
