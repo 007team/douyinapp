@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"errors"
-	"github.com/007team/douyinapp/controller"
+	"github.com/007team/douyinapp/models"
 	"github.com/007team/douyinapp/utils"
 	"github.com/007team/douyinapp/utils/errmsg"
 	"github.com/dgrijalva/jwt-go"
@@ -45,7 +45,7 @@ func (j *JWT) CreateToken(claims MyClaims) (string, error) {
 }
 
 // token生成函数
-func SetToken(c *gin.Context,user controller.User)string {
+func SetToken(c *gin.Context,user models.User)string {
 	j := NewJWT()
 	claims := MyClaims{
 		Username: user.Name,
