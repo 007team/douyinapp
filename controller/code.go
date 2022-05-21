@@ -13,6 +13,7 @@ const (
 	CodeInvalidPassword
 	CodeServerBusy
 	CodeNeedLogin
+	CodeSuccess
 )
 
 // 存储 Code 及状态描述
@@ -23,6 +24,7 @@ var codeMsgMap = map[ResCode]string{
 	CodeInvalidPassword: "用户名或密码错误",
 	CodeServerBusy:      "服务繁忙，请稍后再试",
 	CodeNeedLogin:       "请登录",
+	CodeSuccess:         "",
 }
 
 // Msg     根据 Code 返回对应的状态描述
