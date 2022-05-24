@@ -6,6 +6,8 @@ package mysql
 import (
 	"fmt"
 
+	"github.com/007team/douyinapp/models"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
@@ -24,7 +26,10 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 		cfg.Port,
 		cfg.DbName,
 	)
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+
 	if err != nil {
 		fmt.Println("mysql Open failed", err)
 	}
@@ -36,8 +41,9 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Video{})
+	db.AutoMigrate(&models.Comment{})
 	return err
-}
-func Close() {
-	_ = db
 }

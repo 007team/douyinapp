@@ -10,7 +10,7 @@ mysql:
   host: "127.0.0.1"
   port: 3306
   user: "root"
-  password: ""
+  password: "hsp"
   dbname: "douyin"
   max_open_conns: 200
   max_idle_conns: 50
