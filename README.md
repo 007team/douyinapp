@@ -1,2 +1,2 @@
-middlewares:  token认证中间件                                                   
-pkg/jwt: 生成token函数，解析token函数
+users， videos， comments 表模型迁移                               
+用户注册登录，用户信息 接口编写完成
