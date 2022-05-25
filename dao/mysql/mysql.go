@@ -31,10 +31,10 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 	}
 
 	sqlDB, err := db.DB()
-
-	 err1 := db.AutoMigrate(&models.User{},&models.Video{},&models.Comment{})
+	// &models.UserInfo{},
+	 err = db.AutoMigrate(&models.User{},&models.Video{},&models.Comment{})
 	if err!=nil{
-		log.Println(err1)
+		log.Println(err)
 	}
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)

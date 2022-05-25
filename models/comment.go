@@ -1,15 +1,18 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+)
 
 type Comment struct {
-	User       User   `gorm:"foreignkey:UserId" json:"user"`
-	//Id         int64  `gorm:"primaryKey" json:"id,omitempty"`
-	gorm.Model
-	UserId	   int64  `gorm:"type:int;not null" json:"uid,omitempty"`
-	Content    string `gorm:"type:varchar(500)" json:"content,omitempty"`
-	CreateDate string `gorm:"type:varchar(100)" json:"create_date,omitempty"`
+	Id        int64  `json:"id,omitempty"              gorm:"primaryKey; type:bigint(20) AUTO_INCREMENT"`
+	UserId    int64  `json:"-"                         gorm:"type:bigint(20) not null"`
+	Author    User   `json:"author"                    gorm:"foreignKey:UserId"`
+	Content   string `json:"content,omitempty"         gorm:"type:mediumtext NOT NULL"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
+
 
 
 

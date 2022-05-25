@@ -5,19 +5,25 @@ import (
 	"log"
 )
 
+//
+
+
+// FindVideo todo 无登录态
 func FindVideo()([]models.Video, error){
 	var VideoList []models.Video
+	//
 
-	//err := db.Select("videos.id, play_url, cover_url, favorite_count, comment_count, is_favorite, title, user_id, users.id,users.name,users.follow_count,users.follower_count，users.is_follow").Limit(30).Order("Id DESC").Joins("User").Find(&VideoList).Error
-	err := db.Preload("Author").Find(&VideoList).Error
+	err := db.Preload("Author").Order("updated_at DESC").Limit(30).Find(&VideoList).Error
+
 	if err!=nil{
 		log.Println(err)
 		return nil,err
 	}
-
-
 	return VideoList,nil
 
+}
 
+// todo 有登录状态
+func FindVideoByToken(){
 
 }

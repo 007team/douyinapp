@@ -101,16 +101,16 @@ func UserListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, users 
 	})
 }
 
-func FeedResponseFunc(c *gin.Context, StatusCode int32, code ResCode, videos []models.Video, NextTime int64) {
-	c.JSON(http.StatusOK, &FeedResponse{
-		Response: Response{
-			StatusCode: StatusCode,
-			StatusMsg:  code.Msg(),
-		},
-		VideoList: videos,
-		NextTime:  NextTime,
-	})
-}
+//func FeedResponseFunc(c *gin.Context, StatusCode int32, code ResCode, videos []models.Video, NextTime int64) {
+//	c.JSON(http.StatusOK, &FeedResponse{
+//		Response: Response{
+//			StatusCode: StatusCode,
+//			StatusMsg:  code.Msg(),
+//		},
+//		VideoList: videos,
+//		NextTime:  NextTime,
+//	})
+//}
 
 func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, comments []models.Comment) {
 	c.JSON(http.StatusOK, &CommentListResponse{
