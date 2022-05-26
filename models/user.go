@@ -3,6 +3,7 @@ package models
 
 import "time"
 
+
 type User struct {
 	Id            int64  `json:"id,omitempty"             gorm:"primaryKey; type:bigint(20) AUTO_INCREMENT;"`
 	Name          string `json:"name,omitempty"           gorm:"uniqueIndex:idx_name; type:varchar(64) UNIQUE collate utf8mb4_general_ci not null" `
@@ -14,6 +15,7 @@ type User struct {
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
+
 
 func (User) tableName() string {
 	return "users"
