@@ -33,11 +33,11 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	video.Id = models.LastVideoId // 新视频的videoId
 
 	//先将视频保存到本地
-	if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
-		fmt.Println("c.SaveUploadedFile failed", err)
-		return err
-	}
-	fmt.Println("保存视频完成")
+	//if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
+	//	fmt.Println("c.SaveUploadedFile failed", err)
+	//	return err
+	//}
+	//fmt.Println("保存视频完成")
 	// 生成缩略图
 	//_, err = GetSnapshot(VideoPath+`\`+strconv.Itoa(int(video.Id))+".mp4", ImgPath, 5, video.Id)
 	//if err != nil {
