@@ -16,7 +16,12 @@ const CtxUserIDKey = "userID"
 func JWTAuthMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
 
-		token := c.Query("token") // 从 query 中获取 token
+		token := ""
+		token = c.Query("token")
+		if len(token) == 0 {
+			token = c.PostForm("token")
+		}
+		// 从 query 中获取 token
 		if token == "" {
 			c.JSON(http.StatusOK, controller.Response{
 				StatusCode: 1,

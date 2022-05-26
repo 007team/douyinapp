@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/007team/douyinapp/logic"
@@ -42,6 +43,28 @@ func Publish(c *gin.Context) {
 	//	StatusCode: 0,
 	//	StatusMsg:  finalName + " uploaded successfully",
 	//})
+
+	data, err := c.FormFile("data") // 视频数据
+	if err != nil {
+		ResponseFunc(c, 1, CodeInvalidParam)
+	}
+	title := c.PostForm("title")
+	userId, ok := c.Get("user_id")
+	if !ok {
+		log.Fatalln("c.Get() failed")
+		return
+	}
+	video := models.Video{
+		UserId: userId.(int64),
+		Title:  title,
+	}
+
+	// 业务处理
+	if err := logic.Publish(c, &video, data); err != nil {
+		ResponseFunc(c, 1, CodeServerBusy)
+		return
+	}
+	ResponseFunc(c, 0, CodeSuccess)
 }
 
 // PublishList all users have same publish video list

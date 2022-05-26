@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,5 +11,6 @@ func Feed(c *gin.Context) {
 	//	VideoList: DemoVideos,
 	//	NextTime:  time.Now().Unix(),
 	//})
-	FeedResponseFunc(c, 0, CodeSuccess, DemoVideos, time.Now().Unix())
+	//FeedResponseFunc(c, 0, CodeSuccess, DemoVideos, time.Now().Unix())
+
 }

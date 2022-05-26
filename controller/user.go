@@ -38,8 +38,10 @@ func Register(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, mysql.ErrorUserExist) {
 			UserLoginResponseFunc(c, 1, CodeUserExist, user.Id, token) // 用户已存在
+			return
 		}
 		UserLoginResponseFunc(c, 1, CodeServerBusy, user.Id, token) // 数据查询错误
+		return
 	}
 
 	// 响应成功 ！
@@ -60,14 +62,17 @@ func Login(c *gin.Context) {
 		if err == gorm.ErrRecordNotFound {
 			// 此用户不存在
 			UserLoginResponseFunc(c, 1, CodeUserNotExist, 0, "")
+			return
 		}
 		if err == mysql.ErrorInvalidUserPassword {
 			// 用户密码错误
 			UserLoginResponseFunc(c, 1, CodeInvalidPassword, 0, "")
+			return
 		}
 		// mysql数据库查询错误
 		log.Fatalln("logic.Logic  数据库查询错误")
 		UserLoginResponseFunc(c, 1, CodeServerBusy, 0, "")
+		return
 	}
 
 	// 生成token
@@ -99,6 +104,8 @@ func UserInfo(c *gin.Context) {
 		UserResponseFunc(c, 1, CodeServerBusy, user)
 		return
 	}
+
+	// 响应成功 ！
 	UserResponseFunc(c, 0, CodeSuccess, user)
 
 }

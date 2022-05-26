@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"log"
+
 	"github.com/007team/douyinapp/models"
 )
 
@@ -13,4 +15,12 @@ func GetVideoArr(user_id int64) (VideoArr []models.Video) {
 	db.Preload("Author").Find(&VideoArr, "user_id = ?", user_id)
 
 	return
+}
+
+func CreateNewVideo(video *models.Video) (err error) {
+	if err = db.Select("user_id", "play_url", "cover_url", "title").Create(video).Error; err != nil {
+		log.Fatalln("mysql.CreateNewVideo failed", err)
+		return
+	}
+	return nil
 }
