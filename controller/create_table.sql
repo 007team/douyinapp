@@ -19,17 +19,17 @@ CREATE TABLE videos
 (
     `id`                bigint(20)              NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `user_id`           bigint(20)              NOT NULL  COMMENT '用户id',
-    `name`              varchar(64) UNIQUE      NOT NULL COMMENT '用户名称',
-    `follow_count`      int                     NOT NULL DEFAULT 0 COMMENT '关注总数',
-    `follower_count`    int                     NOT NULL DEFAULT 0 COMMENT '粉丝总数',
-    `is_follow`         tinyint(1)              NOT NULL DEFAULT 0 COMMENT '是否关注',
+#     `name`              varchar(64) UNIQUE      NOT NULL COMMENT '用户名称',
+#     `follow_count`      int                     NOT NULL DEFAULT 0 COMMENT '关注总数',
+#     `follower_count`    int                     NOT NULL DEFAULT 0 COMMENT '粉丝总数',
+#     `is_follow`         tinyint(1)              NOT NULL DEFAULT 0 COMMENT '是否关注',
     `play_url`          varchar(255)            NOT NULL,
     `cover_url`         varchar(255)            NOT NULL,
     `favorite_count`    int                     NOT NULL DEFAULT 0 COMMENT '',
     `comment_count`     INT                     NOT NULL DEFAULT 0 COMMENT '',
     `is_favorite`       tinyint(1)              not null default 0 COMMENT '是否点赞',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_name` (`name`)
+    `title`             varchar(255)            NOT NULL DEFAULT '' COMMENT '视频标题',
+    PRIMARY KEY (`id`)
 )ENGINE = InnoDB
  DEFAULT CHARSET = utf8mb4;
 
