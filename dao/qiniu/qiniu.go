@@ -13,10 +13,10 @@ import (
 )
 
 var (
-	AccessKey        = "PMOpO_-mep9f8MOY-WJyp8qyJLpFCAJIahoJ7VXR"
-	SerectKey        = "av1aSz1oxNLe4M2BSOizs5awbhHvYFVCpP-HZLAf"
-	Bucket           = "007teamdouyin"                // bucket name
-	ImgUrl           = "rcdh4wsuj.hn-bkt.clouddn.com" // 域名
+	AccessKey        = "_TBooutIx4PP6IYLADZ1ue_wBPGc46EC0yv4WlG-"
+	SerectKey        = "hC5xVP__weeda_wh_1oJxlMfLlljM8Re8sP_eKyj"
+	Bucket           = "007douyin"                    // bucket name
+	ImgUrl           = "rchgbnnln.hn-bkt.clouddn.com" // 域名
 	ErrorQiniuFailed = errors.New("七牛：视频上传失败")
 )
 
@@ -48,16 +48,17 @@ func UploadVideoToQiNiu(file *multipart.FileHeader, videoId int64) (int, string,
 	ret := storage.PutRet{}        // 上传后返回的结果
 	putExtra := storage.PutExtra{} // 额外参数
 
-	key := "video/" + strconv.Itoa(int(videoId))
+	key := "videos/" + strconv.Itoa(int(videoId))
 
 	err = formUploader.Put(context.Background(), &ret, upToken, key, src, file.Size, &putExtra)
 	if err != nil {
-		log.Fatalln("qiniu put failed 2", err)
+		fmt.Println("qiniu put failed 2", err)
 		code := 501
 		return code, "", ErrorQiniuFailed
 	}
 
-	url := ImgUrl + ret.Key // 返回上传后的文件访问路径
+	url := "http://" + ImgUrl + "/" + ret.Key // 返回上传后的文件访问路径
+	fmt.Println("视频播放地址： ", url)
 	return 0, url, nil
 
 }
@@ -98,5 +99,6 @@ func UploadImgToQiNiu(imgName string, loadFile string, video_id int64) (url stri
 	fmt.Println("上传成功,key为:", ret.Key)
 
 	// 返回视频封面的url
+	fmt.Println(ImgUrl + ret.Key)
 	return ImgUrl + ret.Key
 }
