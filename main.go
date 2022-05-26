@@ -24,7 +24,7 @@ func main() {
 		fmt.Println("mysql init failed", err)
 		return
 	}
-	// defer mysql.close
+
 
 	// redis 初始化
 	//if err := redis.Init(settings.Conf.RedisConfig); err != nil {
@@ -32,6 +32,8 @@ func main() {
 	//	return
 	//}
 	//defer redis.Close()
+
+
 
 	r := gin.Default()
 	routers.InitRouter(r)

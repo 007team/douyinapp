@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # douyinapp
 极简抖音app服务端开发
 =======
@@ -8,3 +9,7 @@ settings： 配置文件
 models: 模型                                                          
 
 Feed流实现
+=======
+middlewares:  token认证中间件                                                   
+pkg/jwt: 生成token函数，解析token函数
+>>>>>>> master

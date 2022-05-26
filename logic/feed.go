@@ -6,6 +6,7 @@ import (
 )
 
 // GetVideo 获取视频列表
+
 func GetVideo()([]models.Video,error){
 	var Videolist []models.Video
 	var err error
@@ -18,3 +19,4 @@ func GetVideo()([]models.Video,error){
 	return Videolist,nil
 
 }
+
