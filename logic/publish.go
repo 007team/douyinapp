@@ -6,7 +6,7 @@ import (
 	"mime/multipart"
 	"os"
 	"strconv"
-	"sync/atomic"
+	"sync"
 
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 
@@ -19,8 +19,9 @@ import (
 )
 
 var (
-	VideoPath string = "D:\\GO_WORK\\src\\douyinapp\\public\\video" // 保存视频的路径
-	ImgPath   string = "D:\\GO_WORK\\src\\douyinapp\\public\\img"   // 保存图片的路径
+	VideoPath      string = "D:\\GO_WORK\\src\\douyinapp\\public\\video" // 保存视频的路径
+	ImgPath        string = "D:\\GO_WORK\\src\\douyinapp\\public\\img"   // 保存图片的路径
+	GetLastIdMutex sync.Mutex
 )
 
 func PublishList(userId int64) (VideoArr []models.Video) {
@@ -29,16 +30,24 @@ func PublishList(userId int64) (VideoArr []models.Video) {
 }
 
 func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (err error) {
-	atomic.AddInt64(&models.LastVideoId, 1)
-	video.Id = models.LastVideoId // 新视频的videoId
+	//atomic.AddInt64(&models.LastVideoId, 1)
+	//video.Id = models.LastVideoId // 新视频的videoId
 
-	//先将视频保存到本地
+	// 并发不安全，需要加锁
+	GetLastIdMutex.Lock()
+	video.Id = mysql.GetLastId(&models.Video{}) + 1
+	GetLastIdMutex.Unlock()
+
+	//将视频保存到本地
 	if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
 		fmt.Println("c.SaveUploadedFile failed", err)
 		return err
 	}
 	fmt.Println("保存视频完成")
-	// 生成缩略图
+
+	/*
+		生成缩略图 （视频封面）
+	*/
 	snapshotName, err := GetSnapshot(VideoPath+`\`+strconv.Itoa(int(video.Id))+".mp4", ImgPath, 5, video.Id)
 	if err != nil {
 		fmt.Println("缩略图生成失败", err)
@@ -46,29 +55,65 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	}
 	fmt.Println("生成缩略图完成")
 
-	// 上传视频
+	/*
+		通知删除操作
+	*/
+	//tmpChanVideo := make(chan struct{})
+	//tmpChanCover := make(chan struct{})
+	/*
+		通知MySQL操作
+	*/
+	//VideoUploadSuccess := make(chan struct{})
+	//CoverUploadSuccess := make(chan struct{})
+	/* 上传视频到七牛云
+	这里开启一个goroutine
+	上传视频到七牛云和将视频保存到本地同时进行
+	*/
+
 	_, fileUrl, err := qiniu.UploadVideoToQiNiu(data, video.Id)
 	if err != nil {
 		fmt.Println("qiniu upload video failed")
-		return err
+		return
 	}
 	fmt.Println("上传视频完成")
 	video.PlayUrl = fileUrl
-	//video.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"
-	//上传视频封面到七牛云
+
+	//上传封面到七牛云
 	coverUrl := qiniu.UploadImgToQiNiu(snapshotName, ImgPath, video.Id)
 	video.CoverUrl = coverUrl
-	fmt.Println("上传视频封面到七牛云完成")
-	// 删除本地视频
+	fmt.Println("上传封面到七牛云完成")
 
-	// 删除本地视频封面缩略图
+	/*
+		删除本地视频
+	*/
+
+	go func() {
+		VideoFilePath := VideoPath + "\\" + strconv.Itoa(int(video.Id)) + ".mp4"
+		err = os.Remove(VideoFilePath)
+		if err != nil {
+			fmt.Println("本地视频文件删除失败", err)
+			return
+		}
+		fmt.Println("本地视频文件删除完成")
+
+		/*
+			将本地封面删除
+		*/
+		CoverFilePath := ImgPath + "\\" + strconv.Itoa(int(video.Id)) + ".jpeg"
+		err = os.Remove(CoverFilePath)
+		if err != nil {
+			fmt.Println("本地封面缩略图删除失败")
+			return
+		}
+		fmt.Println("本地封面缩略图删除完成")
+	}()
 
 	return mysql.CreateNewVideo(video)
 }
 
-// 截取视频第一帧 生成缩略图
+//  生成缩略图
 func GetSnapshot(videoPath, snapshotPath string, frameNum int, video_id int64) (snapshotName string, err error) {
-	fmt.Println("进 缩略图生成程序")
+	//fmt.Println("进 缩略图生成程序")
 	buf := bytes.NewBuffer(nil)
 
 	err = ffmpeg_go.Input(videoPath).
