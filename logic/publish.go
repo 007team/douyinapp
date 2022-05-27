@@ -33,18 +33,18 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	video.Id = models.LastVideoId // 新视频的videoId
 
 	//先将视频保存到本地
-	//if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
-	//	fmt.Println("c.SaveUploadedFile failed", err)
-	//	return err
-	//}
-	//fmt.Println("保存视频完成")
+	if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
+		fmt.Println("c.SaveUploadedFile failed", err)
+		return err
+	}
+	fmt.Println("保存视频完成")
 	// 生成缩略图
-	//_, err = GetSnapshot(VideoPath+`\`+strconv.Itoa(int(video.Id))+".mp4", ImgPath, 5, video.Id)
-	//if err != nil {
-	//	fmt.Println("缩略图生成失败", err)
-	//	return err
-	//}
-	//fmt.Println("生成缩略图完成")
+	snapshotName, err := GetSnapshot(VideoPath+`\`+strconv.Itoa(int(video.Id))+".mp4", ImgPath, 5, video.Id)
+	if err != nil {
+		fmt.Println("缩略图生成失败", err)
+		return err
+	}
+	fmt.Println("生成缩略图完成")
 
 	// 上传视频
 	_, fileUrl, err := qiniu.UploadVideoToQiNiu(data, video.Id)
@@ -54,11 +54,11 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	}
 	fmt.Println("上传视频完成")
 	video.PlayUrl = fileUrl
-	video.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"
+	//video.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"
 	//上传视频封面到七牛云
-	//coverUrl := qiniu.UploadImgToQiNiu("data", ImgPath, video.Id)
-	//video.CoverUrl = coverUrl
-	//fmt.Println("上传视频封面到七牛云完成")
+	coverUrl := qiniu.UploadImgToQiNiu(snapshotName, ImgPath, video.Id)
+	video.CoverUrl = coverUrl
+	fmt.Println("上传视频封面到七牛云完成")
 	// 删除本地视频
 
 	// 删除本地视频封面缩略图

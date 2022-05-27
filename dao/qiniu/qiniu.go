@@ -100,5 +100,6 @@ func UploadImgToQiNiu(imgName string, loadFile string, video_id int64) (url stri
 
 	// 返回视频封面的url
 	fmt.Println(ImgUrl + ret.Key)
-	return ImgUrl + ret.Key
+	url = "http://" + ImgUrl + "/" + ret.Key
+	return url
 }
