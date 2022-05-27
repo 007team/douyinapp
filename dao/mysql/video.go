@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"fmt"
 	"github.com/007team/douyinapp/models"
 	"log"
 )
@@ -26,4 +27,12 @@ func FindVideo()([]models.Video, error){
 // todo 有登录状态
 func FindVideoByToken(){
 
+}
+
+
+// GetLastId 获取最后一位视频id
+func GetLastId(video *models.Video)(id int64){
+	db.Last(&video)
+	fmt.Println(video.Id)
+	return video.Id
 }

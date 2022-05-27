@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 //type Video struct {
 //	Author        User  `gorm:"foreignkey:UserId"`
@@ -39,3 +41,4 @@ func (Video) tableName() string {
 	return "videos"
 
 }
+

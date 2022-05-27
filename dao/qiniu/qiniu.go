@@ -13,10 +13,10 @@ import (
 )
 
 var (
-	AccessKey        = "_TBooutIx4PP6IYLADZ1ue_wBPGc46EC0yv4WlG-"
-	SerectKey        = "hC5xVP__weeda_wh_1oJxlMfLlljM8Re8sP_eKyj"
-	Bucket           = "007douyin"                    // bucket name
-	ImgUrl           = "rchgbnnln.hn-bkt.clouddn.com" // 域名
+	AccessKey        = "po7IiK8Jsej6qKqvaVVY3tV2OWzbOo6YWvFB1Uku"
+	SerectKey        = "aAeOu9EFs5n9CSm6vQPdkWWJDjNjAaQCFU8ew3om"
+	Bucket           = "dousheng"                    // bucket name
+	ImgUrl           = "video.baiai.xyz" // 域名
 	ErrorQiniuFailed = errors.New("七牛：视频上传失败")
 )
 
@@ -63,6 +63,7 @@ func UploadVideoToQiNiu(file *multipart.FileHeader, videoId int64) (int, string,
 
 }
 
+// UploadImgToQiNiu 上传缩略图
 func UploadImgToQiNiu(imgName string, loadFile string, video_id int64) (url string) {
 	mac := qbox.NewMac(AccessKey, SerectKey)
 
@@ -99,6 +100,6 @@ func UploadImgToQiNiu(imgName string, loadFile string, video_id int64) (url stri
 	fmt.Println("上传成功,key为:", ret.Key)
 
 	// 返回视频封面的url
-	fmt.Println(ImgUrl + ret.Key)
-	return ImgUrl + ret.Key
+	fmt.Println("http://" + ImgUrl + "/" + ret.Key)
+	return "http://" + ImgUrl + "/" + ret.Key
 }
