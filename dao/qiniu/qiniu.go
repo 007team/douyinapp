@@ -16,9 +16,10 @@ var (
 	AccessKey        = "po7IiK8Jsej6qKqvaVVY3tV2OWzbOo6YWvFB1Uku"
 	SerectKey        = "aAeOu9EFs5n9CSm6vQPdkWWJDjNjAaQCFU8ew3om"
 	Bucket           = "dousheng"                    // bucket name
-	ImgUrl           = "video.baiai.xyz" // 域名
+	ImgUrl           = "video.baiai.xyz" 			 // 域名
 	ErrorQiniuFailed = errors.New("七牛：视频上传失败")
 )
+
 
 // UploadVideoToQiNiu 将视频上传到七牛云
 func UploadVideoToQiNiu(file *multipart.FileHeader, videoId int64) (int, string, error) {

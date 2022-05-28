@@ -17,8 +17,8 @@ import (
 )
 
 var (
-	VideoPath string = "G:\\Golandcode\\src\\douyinapp\\public\\video" // 保存视频的路径
-	ImgPath   string = "G:\\Golandcode\\src\\douyinapp\\public\\img"   // 保存图片的路径
+	VideoPath = "G:\\Golandcode\\src\\douyinapp\\public\\video" // 保存视频的路径
+	ImgPath   = "G:\\Golandcode\\src\\douyinapp\\public\\img"   // 保存图片的路径
 )
 
 func PublishList(userId int64) (VideoArr []models.Video) {
@@ -27,11 +27,16 @@ func PublishList(userId int64) (VideoArr []models.Video) {
 }
 
 func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (err error) {
-	// 重启服务，原子增加会重置，待优化
 	//atomic.AddInt64(&models.LastVideoId, 1)
-
 	//video.Id = models.LastVideoId // 新视频的videoId
+
 	video.Id = mysql.GetLastId(&models.Video{}) + 1
+	// 上传视频
+	_, fileUrl, err := qiniu.UploadVideoToQiNiu(data, video.Id)
+	if err != nil {
+		fmt.Println("qiniu upload video failed")
+		return err
+	}
 	//先将视频保存到本地
 	if err = c.SaveUploadedFile(data, VideoPath+"\\"+strconv.Itoa(int(video.Id))+".mp4"); err != nil {
 		fmt.Println("c.SaveUploadedFile failed", err)
@@ -46,12 +51,7 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	}
 	fmt.Println("生成缩略图完成")
 
-	// 上传视频
-	_, fileUrl, err := qiniu.UploadVideoToQiNiu(data, video.Id)
-	if err != nil {
-		fmt.Println("qiniu upload video failed")
-		return err
-	}
+
 	fmt.Println("上传视频完成")
 	video.PlayUrl = fileUrl
 	// video.CoverUrl = "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg"

@@ -43,6 +43,11 @@ type FeedResponse struct {
 	NextTime  int64          `json:"next_time,omitempty"`
 }
 
+type CommentResponse struct {
+	Response
+	Comment		models.Comment `json:"comment"`
+}
+
 type CommentListResponse struct {
 	Response
 	CommentList []models.Comment `json:"comment_list,omitempty"`
@@ -119,5 +124,15 @@ func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, com
 			StatusMsg:  code.Msg(),
 		},
 		CommentList: comments,
+	})
+}
+
+func CommentResponseFunc(c *gin.Context, StatusCode int32, code ResCode, comment models.Comment){
+	c.JSON(http.StatusOK, &CommentResponse{
+		Response: Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		Comment: comment,
 	})
 }
