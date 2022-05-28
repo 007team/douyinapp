@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/007team/douyinapp/models"
@@ -23,4 +24,11 @@ func CreateNewVideo(video *models.Video) (err error) {
 		return
 	}
 	return nil
+}
+
+// GetLastId 获取最后一位视频id
+func GetLastId(video *models.Video) (id int64) {
+	db.Last(&video)
+	fmt.Println(video.Id)
+	return video.Id
 }

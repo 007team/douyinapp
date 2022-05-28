@@ -43,4 +43,3 @@ func CreateNewUser(user *models.User) (err error) {
 func Login(user *models.User) (err error) {
 	return db.Where("name = ?", user.Name).First(&user).Error
 }
-

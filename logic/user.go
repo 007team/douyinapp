@@ -3,6 +3,7 @@ package logic
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"math/rand"
 
@@ -30,6 +31,7 @@ func encryptPassword(oPassword string, salt string) string {
 func Register(user *models.User) (token string, err error) {
 	//先查询该用户是否存在， 如存在则直接返回错误
 	if err = mysql.CheckUserExist(user); err != nil {
+		fmt.Println(" 该用户已存在 ")
 		return "", err
 	}
 
