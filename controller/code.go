@@ -1,8 +1,6 @@
 package controller
 
 // Code msg
-//
-// 如需自定义Code，请提前告知组长
 
 type ResCode int64
 

@@ -30,10 +30,7 @@ func PublishList(userId int64) (VideoArr []models.Video) {
 }
 
 func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (err error) {
-	//atomic.AddInt64(&models.LastVideoId, 1)
-	//video.Id = models.LastVideoId // 新视频的videoId
-
-	// 并发不安全，需要加锁
+	// 并发不安全，加锁
 	GetLastIdMutex.Lock()
 	video.Id = mysql.GetLastId(&models.Video{}) + 1
 	GetLastIdMutex.Unlock()
@@ -56,20 +53,8 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	fmt.Println("生成缩略图完成")
 
 	/*
-		通知删除操作
+		上传视频到七牛云
 	*/
-	//tmpChanVideo := make(chan struct{})
-	//tmpChanCover := make(chan struct{})
-	/*
-		通知MySQL操作
-	*/
-	//VideoUploadSuccess := make(chan struct{})
-	//CoverUploadSuccess := make(chan struct{})
-	/* 上传视频到七牛云
-	这里开启一个goroutine
-	上传视频到七牛云和将视频保存到本地同时进行
-	*/
-
 	_, fileUrl, err := qiniu.UploadVideoToQiNiu(data, video.Id)
 	if err != nil {
 		fmt.Println("qiniu upload video failed")
@@ -83,11 +68,10 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	video.CoverUrl = coverUrl
 	fmt.Println("上传封面到七牛云完成")
 
-	/*
-		删除本地视频
-	*/
-
 	go func() {
+		/*
+			删除本地视频
+		*/
 		VideoFilePath := VideoPath + "\\" + strconv.Itoa(int(video.Id)) + ".mp4"
 		err = os.Remove(VideoFilePath)
 		if err != nil {
@@ -113,7 +97,6 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 
 //  生成缩略图
 func GetSnapshot(videoPath, snapshotPath string, frameNum int, video_id int64) (snapshotName string, err error) {
-	//fmt.Println("进 缩略图生成程序")
 	buf := bytes.NewBuffer(nil)
 
 	err = ffmpeg_go.Input(videoPath).
