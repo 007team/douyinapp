@@ -9,7 +9,7 @@ import (
 // 获取评论列表
 func GetCommentList(videoId int64)(CommentList []models.Comment){
 
-	err := db.Preload("Author").Where("video_id = ?",videoId).Find(&CommentList).Error
+	err := db.Preload("Author").Where("video_id = ?",videoId).Order("updated_at DESC").Find(&CommentList).Error
 	if err!=nil{
 		log.Println("dao.GetCommentList error:",err)
 	}
@@ -31,7 +31,6 @@ func AddVideoCommentCount(videoId int64)(err error){
 
 	var video models.Video
 	db.Preload("Author").Where("id = ?", videoId).First(&video)
-	log.Println("video.CommentCount:",video.CommentCount)
 	video.CommentCount=video.CommentCount+1
 
 	db.Save(&video)
