@@ -6,6 +6,7 @@ import (
 	"github.com/007team/douyinapp/models"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"strconv"
 )
 
@@ -23,7 +24,7 @@ func CommentAction(c *gin.Context) {
 	videoIdStr := c.Query("video_id") // 获取视频id
 	videoId,err := strconv.ParseInt(videoIdStr,10,64)
 	if err!=nil{
-		log.Fatalln("controller.CommentAction videoid transform failed:", err)
+		log.Println("controller.CommentAction videoid transform failed:", err)
 		CommentListResponseFunc(c,1,CommentError,[]models.Comment{})
 		return
 	}
@@ -50,6 +51,10 @@ func CommentAction(c *gin.Context) {
 		}
 		commentReponse = comment
 
+		CommentResponseFunc(c,0,CodeSuccess,commentReponse)
+
+		return
+
 	// 执行删除逻辑
 	}else if actionType==2{
 		commentIdStr := c.Query("comment_id")
@@ -59,12 +64,18 @@ func CommentAction(c *gin.Context) {
 			Id: commentId,
 		}
 
-		err := logic.DeleteComment(&comment)
+		err := logic.DeleteComment(&comment,videoId)
 		if err!=nil{
 			log.Println("comment删除失败")
 			return
 		}
 		commentReponse = comment
+
+		c.JSON(http.StatusOK,gin.H{
+			"status_code" : 0,
+			"status_msg"  : "删除成功",
+		})
+		return
 
 	}else{
 		c.JSON(200,gin.H{
@@ -74,7 +85,7 @@ func CommentAction(c *gin.Context) {
 		return
 	}
 
-	CommentResponseFunc(c,0,CodeSuccess,commentReponse)
+
 
 
 }
@@ -92,5 +103,5 @@ func CommentList(c *gin.Context) {
 	var comment []models.Comment
 
 	comment = logic.GetCommentList(videoId)
-	CommentListResponseFunc(c,1,CodeSuccess,comment)
+	CommentListResponseFunc(c,0,CodeSuccess,comment)
 }

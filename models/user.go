@@ -4,30 +4,6 @@ package models
 import "time"
 
 
-//type User struct {
-//	// Id            uint  `gorm:"primaryKey" json:"id,omitempty"`
-//	gorm.Model
-//	Name          string	`gorm:"type:varchar(100);not null" json:"name,omitempty"`
-//	FollowCount   int64 	`gorm:"type:int;not null;DEFAULT:0" json:"follow_count,omitempty"`
-//	FollowerCount int64 	`gorm:"type:int;not null;DEFAULT:0" json:"follower_count,omitempty"`
-//	Password      string	`gorm:"type:varchar(100);not null" json:"password"`
-//	IsFollow      bool  	`json:"is_follow,omitempty"`
-//	Salt          string	`gorm:"type:varchar(100);not null" json:"salt"`
-//}
-
-
-//func (u *User)AfterFind(tx *gorm.DB)(err error){
-//
-//	u.Password=""
-//	u.Salt=""
-//
-//	return
-//}
-
-
-
-
-
 type User struct {
 	Id            int64  `json:"id,omitempty"             gorm:"primaryKey; type:bigint(20) AUTO_INCREMENT;"`
 	Name          string `json:"name,omitempty"           gorm:"uniqueIndex:idx_name; type:varchar(64) UNIQUE collate utf8mb4_general_ci not null" `

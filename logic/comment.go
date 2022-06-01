@@ -8,10 +8,13 @@ import (
 // CreateComment 创建评论
 func CreateComment(comment *models.Comment)(err error){
 
+
+
 	if err = mysql.AddComment(comment);err!=nil{
 		log.Println("AddComment failed")
 		return
 	}
+
 	if err = mysql.AddVideoCommentCount(comment.VideoId);err!=nil{
 		return
 	}
@@ -19,13 +22,16 @@ func CreateComment(comment *models.Comment)(err error){
 	return nil
 }
 // DeleteComment 删除评论
-func DeleteComment(comment *models.Comment)(err error){
+func DeleteComment(comment *models.Comment,videoid int64)(err error){
+
+	if err = mysql.SubVideoCommentCount(videoid);err!=nil{
+		return
+	}
 
 	if err = mysql.DelComment(comment);err!=nil{
 		log.Println("DelComment failed")
 		return
 	}
-
 
 
 	return nil

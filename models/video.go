@@ -4,23 +4,6 @@ import (
 	"time"
 )
 
-//type Video struct {
-//	Author        User  `gorm:"foreignkey:UserId"`
-//	//Id            int64  `gorm:"primaryKey" json:"id,omitempty" `
-//	gorm.Model
-//	UserId		  int64	 `gorm:"type:int;not null" json:"user_id"`
-//	PlayUrl       string `gorm:"type:varchar(255)" json:"play_url" json:"play_url,omitempty"`
-//	CoverUrl      string `gorm:"type:varchar(255)" json:"cover_url,omitempty"`
-//	FavoriteCount int64  `gorm:"type:int;not null" json:"favorite_count,omitempty"`
-//	CommentCount  int64  `gorm:"type:int;not null" json:"comment_count,omitempty"`
-//	IsFavorite    bool   `gorm:"not null" json:"is_favorite,omitempty"`
-//	Title		  string `gorm:"type:varchar(100)" json:"title"`
-//}
-
-
-
-
-var LastVideoId int64 = 0
 
 type Video struct {
 	Id            int64  `json:"id,omitempty"              gorm:"primaryKey; type:bigint(20) AUTO_INCREMENT"`

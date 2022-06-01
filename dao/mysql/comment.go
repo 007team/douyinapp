@@ -31,7 +31,7 @@ func AddVideoCommentCount(videoId int64)(err error){
 
 	var video models.Video
 	db.Preload("Author").Where("id = ?", videoId).First(&video)
-	video.CommentCount=video.CommentCount+1
+	video.CommentCount++
 
 	db.Save(&video)
 
@@ -46,4 +46,17 @@ func DelComment(comment *models.Comment)(err error){
 	}
 
 	return nil
+}
+
+// 减少视频评论数
+func SubVideoCommentCount(videoId int64)(err error){
+
+	var video models.Video
+
+	db.Preload("Author").Where("id = ?", videoId).First(&video)
+	video.CommentCount--
+
+	db.Save(&video)
+
+	return
 }
