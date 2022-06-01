@@ -47,6 +47,10 @@ type CommentListResponse struct {
 	Response
 	CommentList []models.Comment `json:"comment_list,omitempty"`
 }
+type FollowListResponse struct {
+	Response
+	UserList []models.User `json:"user_list,omitempty"`
+}
 
 // StatusMsg 返回状态描述，这个message是直接给用户看的，所以在定义Code时请勿描述业务相关内容
 // 例如：当业务处理失败时 (如数据库查询失败时)，请返回CodeServerBusy
@@ -119,5 +123,15 @@ func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, com
 			StatusMsg:  code.Msg(),
 		},
 		CommentList: comments,
+	})
+}
+
+func FollowListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, users []models.User) {
+	c.JSON(http.StatusOK, &FollowListResponse{
+		Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		users,
 	})
 }
