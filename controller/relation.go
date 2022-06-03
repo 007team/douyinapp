@@ -82,7 +82,8 @@ func FollowList(c *gin.Context) {
 		// 数据库操作错误
 		FollowListResponseFunc(c, 1, CodeServerBusy, nil)
 	}
-
+	fmt.Println(userId, "的关注列表为")
+	fmt.Printf("%v\n", users)
 	// 成功返回
 	FollowListResponseFunc(c, 0, CodeSuccess, users)
 
@@ -90,10 +91,20 @@ func FollowList(c *gin.Context) {
 
 // FollowerList all users have same follower list
 func FollowerList(c *gin.Context) {
-	//c.JSON(http.StatusOK, UserListResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//	},
-	//	UserList: []User{DemoUser},
-	//})
+	// 获取粉丝列表
+	userIdStr := c.Query("user_id")
+	userId, err := strconv.ParseInt(userIdStr, 10, 64)
+	if err != nil {
+		log.Println("strconv.ParseInt userIdStr failed", err)
+		FollowerListResponseFunc(c, 1, CodeInvalidParam, nil)
+	}
+	users, err := logic.FollowerList(userId)
+	if err != nil {
+		log.Println("logic.FollowerList failed", err)
+		FollowerListResponseFunc(c, 1, CodeServerBusy, nil)
+	}
+	fmt.Println(userId, "的关注粉丝为")
+	fmt.Printf("%v\n", users)
+	FollowerListResponseFunc(c, 0, CodeSuccess, users)
+
 }

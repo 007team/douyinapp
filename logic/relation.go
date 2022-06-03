@@ -27,9 +27,26 @@ func UnfollowAction(userId, toUserId int64) (err error) {
 func FollowList(userId int64) (users []models.User, err error) {
 	// 返回用户的关注列表
 	es, err := redis.FollowList(userId)
-
+	if err != nil {
+		return nil, nil
+	}
 	// mysql查询用户
-	users, err = mysql.FollowList(es)
+	if len(es) != 0 {
+		users, err = mysql.FollowList(es)
+	}
+
+	return users, err
+}
+
+func FollowerList(userId int64) (users []models.User, err error) {
+	// 获取用户的粉丝列表
+	es, err := redis.FollowerList(userId)
+	if err != nil {
+		return nil, nil
+	}
+	if len(es) != 0 {
+		users, err = mysql.FollowList(es)
+	}
 
 	return users, err
 }

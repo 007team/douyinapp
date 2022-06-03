@@ -1,6 +1,8 @@
 package redis
 
-import "log"
+import (
+	"log"
+)
 
 // FollowAction 向我的关注列表里添加对方的id
 func FollowAction(userId, toUserId int64) (err error) {
@@ -49,6 +51,18 @@ func UnFollowerActionToUser(userId, toUserId int64) (err error) {
 
 func FollowList(userId int64) (es []string, err error) {
 	userIdKey := getKeyUserFollowSet(userId) // 用户的关注列表
+	es, err = rdb.SMembers(userIdKey).Result()
+
+	if err != nil {
+		log.Println("rdb.SMembers failed", err)
+		return nil, err
+	}
+	return es, err
+}
+
+func FollowerList(userId int64) (es []string, err error) {
+	// 获取用户的关注列表
+	userIdKey := getKeyUserFollowerSet(userId)
 	es, err = rdb.SMembers(userIdKey).Result()
 	if err != nil {
 		log.Println("rdb.SMembers failed", err)
