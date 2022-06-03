@@ -121,3 +121,10 @@ func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, com
 		CommentList: comments,
 	})
 }
+
+func FavoriteActionResponseFunc(c *gin.Context, StatusCode int32, code ResCode) {
+	c.JSON(http.StatusOK, &Response{
+		StatusCode: StatusCode, // 状态码，0-成功，其他值-失败
+		StatusMsg:  code.Msg(),
+	})
+}

@@ -24,8 +24,9 @@ var (
 	GetLastIdMutex sync.Mutex
 )
 
-func PublishList(userId int64) (VideoArr []models.Video) {
-	VideoArr = mysql.GetVideoArr(userId)
+// 返回查询到的视频队列
+func PublishList(userId int64) (VideoArr []models.Video, err error) {
+	VideoArr, err = mysql.GetVideoArr(userId)
 	return
 }
 

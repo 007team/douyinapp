@@ -12,9 +12,21 @@ import (
 传入: 用户名
 返回: Video数组
 */
-func GetVideoArr(user_id int64) (VideoArr []models.Video) {
-	db.Preload("Author").Find(&VideoArr, "user_id = ?", user_id)
+func GetVideoArr(userId int64) (videoArr []models.Video, err error) {
+	err = db.Preload("Author").Find(&videoArr, "user_id = ?", userId).Error
+	if err != nil {
+		log.Fatalln("mysql.GetVideoArr failed", err)
+	}
 
+	return
+}
+
+// 根据视频id查询对应的视频信息
+func GetVideoByVideoId(videoId int64) (videoMes models.Video, err error) {
+	err = db.Preload("Author").Find(&videoMes, "video_id = ?", videoId).Error
+	if err != nil {
+		log.Fatalln("mysql.GetVideoByVideoId failed", err)
+	}
 	return
 }
 
