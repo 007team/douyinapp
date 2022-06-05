@@ -5,34 +5,29 @@ import (
 	"github.com/007team/douyinapp/models"
 	"log"
 )
+
 // CreateComment 创建评论
 func CreateComment(comment *models.Comment)(err error){
-
-
 
 	if err = mysql.AddComment(comment);err!=nil{
 		log.Println("AddComment failed")
 		return
 	}
 
-	if err = mysql.AddVideoCommentCount(comment.VideoId);err!=nil{
-		return
-	}
+	//if err = mysql.AddVideoCommentCount(comment.VideoId);err!=nil{
+	//	return
+	//}
 
 	return nil
 }
+
 // DeleteComment 删除评论
 func DeleteComment(comment *models.Comment,videoid int64)(err error){
 
-	if err = mysql.SubVideoCommentCount(videoid);err!=nil{
-		return
-	}
-
-	if err = mysql.DelComment(comment);err!=nil{
+	if err = mysql.DelComment(comment,videoid);err!=nil{
 		log.Println("DelComment failed")
 		return
 	}
-
 
 	return nil
 }
