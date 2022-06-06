@@ -14,10 +14,6 @@ func CreateComment(comment *models.Comment)(err error){
 		return
 	}
 
-	//if err = mysql.AddVideoCommentCount(comment.VideoId);err!=nil{
-	//	return
-	//}
-
 	return nil
 }
 

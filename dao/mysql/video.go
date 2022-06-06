@@ -20,12 +20,17 @@ func FindVideo()([]models.Video, error){
 		log.Println(err)
 		return nil,err
 	}
+
+
+
 	return VideoList,nil
 
 }
 
 // todo 有登录状态
 func FindVideoByToken(){
+
+
 
 }
 

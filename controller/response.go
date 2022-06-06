@@ -43,14 +43,32 @@ type FeedResponse struct {
 	NextTime  int64          `json:"next_time,omitempty"`
 }
 
+type FollowListResponse struct {
+	Response
+	UserList []models.User `json:"user_list,omitempty"`
+}
 type CommentResponse struct {
 	Response
-	Comment		models.Comment `json:"comment"`
+	Comment models.Comment `json:"comment"`
 }
 
 type CommentListResponse struct {
 	Response
 	CommentList []models.Comment `json:"comment_list,omitempty"`
+}
+
+type FollowerListResponse struct {
+	Response
+	UserList []models.User `json:"user_list,omitempty"`
+}
+
+type FavoriteActionResponse struct {
+	Response
+}
+
+type FavoriteListResponse struct {
+	Response
+	VideoList []models.Video `json:"video_list,omitempty"`
 }
 
 // StatusMsg 返回状态描述，这个message是直接给用户看的，所以在定义Code时请勿描述业务相关内容
@@ -106,17 +124,26 @@ func UserListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, users 
 	})
 }
 
-//func FeedResponseFunc(c *gin.Context, StatusCode int32, code ResCode, videos []models.Video, NextTime int64) {
-//	c.JSON(http.StatusOK, &FeedResponse{
-//		Response: Response{
-//			StatusCode: StatusCode,
-//			StatusMsg:  code.Msg(),
-//		},
-//		VideoList: videos,
-//		NextTime:  NextTime,
-//	})
-//}
+func FeedResponseFunc(c *gin.Context, StatusCode int32, code ResCode, videos []models.Video, NextTime int64) {
+	c.JSON(http.StatusOK, &FeedResponse{
+		Response: Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		VideoList: videos,
+		NextTime:  NextTime,
+	})
+}
 
+func FollowListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, users []models.User) {
+	c.JSON(http.StatusOK, &FollowListResponse{
+		Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		users,
+	})
+}
 func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, comments []models.Comment) {
 	c.JSON(http.StatusOK, &CommentListResponse{
 		Response: Response{
@@ -127,12 +154,41 @@ func CommentListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, com
 	})
 }
 
-func CommentResponseFunc(c *gin.Context, StatusCode int32, code ResCode, comment models.Comment){
+func CommentResponseFunc(c *gin.Context, StatusCode int32, code ResCode, comment models.Comment) {
 	c.JSON(http.StatusOK, &CommentResponse{
 		Response: Response{
 			StatusCode: StatusCode,
 			StatusMsg:  code.Msg(),
 		},
 		Comment: comment,
+	})
+}
+
+func FollowerListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, users []models.User) {
+	c.JSON(http.StatusOK, &FollowListResponse{
+		Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		users,
+	})
+}
+
+func FavoriteActionResponseFunc(c *gin.Context, StatusCode int32, code ResCode) {
+	c.JSON(http.StatusOK, &FavoriteActionResponse{
+		Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+	})
+}
+
+func FavoriteListResponseFunc(c *gin.Context, StatusCode int32, code ResCode, videos []models.Video) {
+	c.JSON(http.StatusOK, &FavoriteListResponse{
+		Response{
+			StatusCode: StatusCode,
+			StatusMsg:  code.Msg(),
+		},
+		videos,
 	})
 }

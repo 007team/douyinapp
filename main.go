@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/007team/douyinapp/dao/redis"
 	"github.com/007team/douyinapp/routers"
 	"github.com/gin-gonic/gin"
 )
@@ -27,11 +28,11 @@ func main() {
 
 
 	// redis 初始化
-	//if err := redis.Init(settings.Conf.RedisConfig); err != nil {
-	//	fmt.Println("redis init failed", err)
-	//	return
-	//}
-	//defer redis.Close()
+	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
+		fmt.Println("redis init failed", err)
+		return
+	}
+	defer redis.Close()
 
 
 
