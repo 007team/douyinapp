@@ -30,16 +30,17 @@ func AddFavoriteVideo(userId int64, videoId int64) (err error) {
 				err = rdb.SAdd(UserFavoriteSetKey, videoIdStr).Err()
 				if err != nil {
 					log.Println("redis.AddFavoriteVideo.SAdd 点赞视频添加到队列中失败了", err)
-					return err
 				}
-				err = incrNumToFavoriteCount(1, &videoIdStr)
 				return err
 			})
+			if err != nil {
+				err = incrNumToFavoriteCount(1, &videoIdStr)
+			}
 		} else {
 			log.Println("redis.AddFavoriteVideo 点赞操作重复执行了")
 		}
-		return nil
-	}, UserFavoriteSetKey, getKeyAllVideoZSet())
+		return err
+	}, UserFavoriteSetKey)
 	// if ok, _ := rdb.SIsMember(UserFavoriteSetKey, videoIdStr).Result(); !ok {
 	// 	err = rdb.SAdd(UserFavoriteSetKey, videoIdStr).Err()
 	// 	if err != nil {
@@ -64,16 +65,17 @@ func RemFavoriteVideo(userId int64, videoId int64) (err error) {
 				err = rdb.SRem(UserFavoriteSetKey, videoIdStr).Err()
 				if err != nil {
 					log.Println("redis.RemFavoriteVideo.SRem 点赞视频从队列中删除失败了", err)
-					return err
 				}
-				err = incrNumToFavoriteCount(-1, &videoIdStr)
 				return err
 			})
+			if err != nil {
+				err = incrNumToFavoriteCount(-1, &videoIdStr)
+			}
 		} else {
 			log.Println("redis.RemFavoriteVideo 取消点赞操作重复执行了")
 		}
 		return err
-	}, UserFavoriteSetKey, getKeyAllVideoZSet())
+	}, UserFavoriteSetKey)
 	return
 }
 
