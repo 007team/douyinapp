@@ -12,7 +12,7 @@ type Video struct {
 	CoverUrl      string `json:"cover_url,omitempty"       gorm:"type:varchar(255) NOT NULL"`
 	FavoriteCount int64  `json:"favorite_count,omitempty"  gorm:"type:int  NOT NULL DEFAULT 0"`
 	CommentCount  int64  `json:"comment_count,omitempty"   gorm:"type:int  NOT NULL DEFAULT 0"`
-	IsFavorite    bool   `json:"is_favorite,omitempty"     gorm:"type:tinyint(1) not null default 0"`
+	IsFavorite    bool   `json:"is_favorite,omitempty"     gorm:"-"`
 	Title         string `json:"title,omitempty"           gorm:"type:varchar(255)  collate utf8mb4_general_ci NOT NULL DEFAULT ''  "`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time

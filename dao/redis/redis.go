@@ -36,3 +36,6 @@ func Close() {
 		return
 	}
 }
+func RDB() *redis.Client {
+	return rdb
+}

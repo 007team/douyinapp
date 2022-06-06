@@ -37,7 +37,7 @@ func AddVideoCommentCount(videoId int64) (err error) {
 }
 
 // 删除评论
-func DelComment(comment *models.Comment) (err error) {
+func DelComment(comment models.Comment) (err error) {
 	if err = db.Where("id = ?", comment.Id).Delete(comment).Error; err != nil {
 		log.Println("mysql.comment.DelComment error", err)
 		return err

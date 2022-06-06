@@ -51,7 +51,7 @@ func FavoriteAction(c *gin.Context) {
 
 }
 
-// FavoriteList all users have same favorite video list
+// FavoriteList 点赞视频列表
 func FavoriteList(c *gin.Context) {
 	userId, ok := c.Get("user_id")
 	if !ok {

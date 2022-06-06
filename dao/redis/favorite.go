@@ -16,6 +16,7 @@ func FavoriteAction(userId int64, videoId int64) (err error) {
 	if err != nil {
 		log.Println("pipe.ZIncrBy failed", err)
 	}
+	
 	// 在用户的点赞视频列表里写入videoId
 	err = pipe.SAdd(KeyUserFavoriteVideoSet, videoId).Err()
 	if err != nil {

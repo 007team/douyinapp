@@ -45,7 +45,7 @@ func FollowerList(userId int64) (users []models.User, err error) {
 		return nil, nil
 	}
 	if len(es) != 0 {
-		users, err = mysql.FollowList(es)
+		users, err = mysql.FollowerList(es)
 	}
 
 	return users, err

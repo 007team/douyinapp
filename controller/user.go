@@ -90,6 +90,7 @@ func Login(c *gin.Context) {
 // UserInfo 用户信息
 func UserInfo(c *gin.Context) {
 	userIdStr := c.Query("user_id") // 获取用户id
+	myUserId, _ := c.Get("user_id")
 	userid, err := strconv.ParseInt(userIdStr, 10, 64)
 	if err != nil {
 		log.Fatalln("UserInfo: user_id invalied", err)
@@ -99,7 +100,7 @@ func UserInfo(c *gin.Context) {
 	user := models.User{
 		Id: userid,
 	}
-	if err := logic.UserInfo(&user); err != nil {
+	if err := logic.UserInfo(&user, myUserId.(int64)); err != nil {
 		log.Fatalln("logic.UserInfo failed", err)
 		UserResponseFunc(c, 1, CodeServerBusy, user)
 		return

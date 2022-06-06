@@ -9,17 +9,17 @@ import (
 //
 
 // FindVideo todo 无登录态
-func FindVideo() ([]models.Video, error) {
-	var VideoList []models.Video
+func FindVideo() (videos []models.Video, err error) {
+
 	//
 
-	err := db.Preload("Author").Order("updated_at DESC").Limit(30).Find(&VideoList).Error
+	err = db.Preload("Author").Order("updated_at DESC").Limit(30).Find(&videos).Error
 
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	return VideoList, nil
+	return videos, nil
 
 }
 

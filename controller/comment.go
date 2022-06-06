@@ -64,7 +64,7 @@ func CommentAction(c *gin.Context) {
 			Id: commentId,
 		}
 
-		err := logic.DeleteComment(&comment, videoId)
+		err := logic.DeleteComment(comment, videoId)
 		if err != nil {
 			log.Println("comment删除失败")
 			return

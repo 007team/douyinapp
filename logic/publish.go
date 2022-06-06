@@ -3,6 +3,7 @@ package logic
 import (
 	"bytes"
 	"fmt"
+
 	"mime/multipart"
 	"os"
 	"strconv"
@@ -10,12 +11,12 @@ import (
 
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 
-	"github.com/gin-gonic/gin"
-
 	"github.com/007team/douyinapp/dao/mysql"
 	"github.com/007team/douyinapp/dao/qiniu"
+	"github.com/007team/douyinapp/dao/redis"
 	"github.com/007team/douyinapp/models"
 	"github.com/disintegration/imaging"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -68,6 +69,12 @@ func Publish(c *gin.Context, video *models.Video, data *multipart.FileHeader) (e
 	video.CoverUrl = coverUrl
 	fmt.Println("上传封面到七牛云完成")
 
+	// 添加videoId到 视频数zset 和 评论数zset
+	err = redis.Publish(video.Id)
+	if err != nil {
+		fmt.Println("redis.Publish(video.Id) failed")
+		return
+	}
 	go func() {
 		/*
 			删除本地视频

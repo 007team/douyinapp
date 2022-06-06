@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"github.com/007team/douyinapp/dao/redis"
 	"log"
 	"math/rand"
 
@@ -15,11 +16,32 @@ import (
 
 var letters = []byte("abcdefghjkmnpqrstuvwxyz123456789")
 
-func UserInfo(user *models.User) (err error) {
+func UserInfo(user *models.User, myUserId int64) (err error) {
+	// mysql查询用户具体信息
 	if err = mysql.UserInfo(user); err != nil {
 		log.Fatalln("mysql.UserInfo failed", err)
 		return err
 	}
+	// redis查询用户的粉丝与关注数
+	user.FollowCount, err = redis.UserFollowCount(user.Id)
+	if err != nil {
+		log.Println("redis.UserFollowCount(user.Id) failed", err)
+		return err
+	}
+	user.FollowerCount, err = redis.UserFollowerCount(user.Id)
+	if err != nil {
+		log.Println("redis.UserFollowerCount(user.Id) failed", err)
+		return err
+	}
+	// “我”是否关注了这个用户
+
+	user.IsFollow, err = redis.IsFollowUser(user, myUserId)
+	if err != nil {
+		log.Println("redis.IsFollowUser(user, myUserId) failed", err)
+		return err
+	}
+
+	//redis.IsFollowUser()
 	return nil
 }
 

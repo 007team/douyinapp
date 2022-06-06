@@ -47,3 +47,7 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 	db.AutoMigrate(&models.Comment{})
 	return err
 }
+
+func DB() *gorm.DB {
+	return db
+}
