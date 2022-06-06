@@ -10,7 +10,7 @@ type User struct {
 	FollowCount   int64  `json:"follow_count,omitempty"   gorm:"column:follow_count; type:INT NOT NULL DEFAULT 0 "`
 	FollowerCount int64  `json:"follower_count,omitempty" gorm:"column:follower_count; type:INT NOT NULL DEFAULT 0"`
 	Password      string `json:"-"                        gorm:"column:password; type:varchar(200) NOT NULL"`
-	IsFollow      bool   `json:"is_follow,omitempty"      gorm:"column:is_follow; type:tinyint(1) NOT NULL DEFAULT 0"`
+	IsFollow      bool   `json:"is_follow,omitempty"      gorm:"-"`
 	Salt          string `json:"-"                        gorm:"column:salt;  type:varchar(255) NOT NULL"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time

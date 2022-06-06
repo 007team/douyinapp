@@ -5,6 +5,7 @@ package mysql
 
 import (
 	"fmt"
+	"github.com/007team/douyinapp/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -35,7 +36,7 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 
 	sqlDB, err := db.DB()
 
-	 //err = db.AutoMigrate(&models.User{},&models.Video{},&models.Comment{})
+	 err = db.AutoMigrate(&models.User{},&models.Video{},&models.Comment{})
 	if err!=nil{
 		log.Println(err)
 	}

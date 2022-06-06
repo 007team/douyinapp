@@ -1,106 +1,70 @@
 package controller
 
 import (
-	"fmt"
-	"github.com/007team/douyinapp/dao/redis"
+	"log"
+	"net/http"
 	"time"
 
 	"github.com/007team/douyinapp/logic"
 	"github.com/007team/douyinapp/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // Feed same demo video list for every request
 
 func Feed(c *gin.Context) {
-	// 可选参数，限制返回视频的最新投稿时间戳，精确到秒。条件：update_time
-	//last_time := c.Query("latest_time")
-	// 用户登录态，有则去关注列表获取最新视频
-	userIdStr,ok := c.Get("user_id") // 获取用户id
-	fmt.Println(userIdStr)
-	if ok{
-		// 登录态
-		//userId := userIdStr.(int64)
+	mode, ok := c.Get("mode")
+	if !ok {
+		log.Println("c.Get(\"mode\") failed")
+		return
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	}else{
-		// 无登录
+	if mode.(string) == "NotLoggedIn" {
+		// 未登录状态
 		var videolist []models.Video
-		videolist,err := logic.GetVideo()
-		if err!=nil{
-			c.JSON(http.StatusOK,Response{
-				StatusCode:2,
-				StatusMsg: "视频获取错误",
-
+		var err error
+		videolist, err = logic.NotLoggedInGetVideo()
+		if err != nil {
+			c.JSON(http.StatusOK, Response{
+				StatusCode: 2,
+				StatusMsg:  "视频获取错误",
 			})
 			return
 		}
-		// 信息脱敏
+		// 去敏
 		length := len(videolist)
-
-		for i:=0;i<length;i++{
-			videolist[i].Author.Salt =""
-			videolist[i].Author.Password =""
-			videolist[i].FavoriteCount = redis.FavoriteCountById(videolist[i].Id)
+		for i := 0; i < length; i++ {
+			videolist[i].Author.Salt = ""
+			videolist[i].Author.Password = ""
 		}
-
 		c.JSON(http.StatusOK, FeedResponse{
 			Response: Response{
 				StatusCode: 0,
 				StatusMsg:  "视频获取成功",
-
 			},
 			VideoList: videolist,
 			NextTime:  time.Now().Unix(),
 		})
 
-
-
-
+	} else if mode.(string) == "LoggedIn" {
+		// 已登录状态
+		//var videolist []models.Video
+		userId, ok := c.Get("user_id")
+		if !ok {
+			log.Println("c.Get(\"user_id\") failed")
+			return
+		}
+		videolist, err := logic.LoggedInGetVideo(userId.(int64))
+		if err != nil {
+			FeedResponseFunc(c, 1, CodeServerBusy, nil, time.Now().Unix())
+			return
+		}
+		length := len(videolist)
+		for i := 0; i < length; i++ {
+			videolist[i].Author.Salt = ""
+			videolist[i].Author.Password = ""
+		}
+		FeedResponseFunc(c, 0, CodeSuccess, videolist, time.Now().Unix())
 	}
-
-
-
-
-	//var videolist []models.Video
-	//videolist,err := logic.GetVideo()
-	//if err!=nil{
-	//	c.JSON(http.StatusOK,Response{
-	//		StatusCode:2,
-	//		StatusMsg: "视频获取错误",
-	//
-	//	})
-	//	return
-	//}
-	//// 信息脱敏
-	//length := len(videolist)
-	//
-	//for i:=0;i<length;i++{
-	//	videolist[i].Author.Salt=""
-	//	videolist[i].Author.Password=""
-	//}
-	//
-	//c.JSON(http.StatusOK, FeedResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//		StatusMsg:  "视频获取成功",
-	//
-	//	},
-	//	VideoList: videolist,
-	//	NextTime:  time.Now().Unix(),
-	//})
 
 }

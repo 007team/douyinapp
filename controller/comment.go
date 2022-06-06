@@ -85,9 +85,6 @@ func CommentAction(c *gin.Context) {
 		return
 	}
 
-
-
-
 }
 
 // CommentList all videos have same demo comment list

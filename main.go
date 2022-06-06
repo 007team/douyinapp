@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/007team/douyinapp/dao/redis"
 	"github.com/007team/douyinapp/routers"
+
 	"github.com/gin-gonic/gin"
 )
 
 import (
 	"fmt"
 	"github.com/007team/douyinapp/dao/mysql"
-	// "github.com/007team/douyinapp/dao/redis"
 	"github.com/007team/douyinapp/settings"
 )
 
